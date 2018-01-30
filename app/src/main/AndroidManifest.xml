@@ -28,10 +28,12 @@
 
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
+                <action android:name="com.github.alexvishneuski.Browser" />
                 <data android:scheme="http" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".VKActivity" />
     </application>
 
 </manifest>

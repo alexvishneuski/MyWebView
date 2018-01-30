@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
+
+    private String vkurl = "https://oauth.vk.com/authorize?client_id=6261957&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends,messages&response_type=token&v=5.69&state=123456";
+
     Button webButton;
 
     @Override
@@ -20,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
         webButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://developer.android.com"));
+                Uri uri = Uri.parse(vkurl);
+                Intent intent = new Intent(MainActivity.this, BrowserActivity.class);
+                intent.setData(uri);
+                //implicit transition (by action)
                 startActivity(intent);
             }
         });

@@ -3,4 +3,5 @@
     <string name="web">Web</string>
     <string name="map">Map</string>
     <string name="call">Call</string>
+    <string name="vkactivity">vkactivity</string>
 </resources>
