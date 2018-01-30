@@ -8,18 +8,16 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnWeb;
-    Button btnMap;
-    Button btnCall;
+    Button webButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnWeb = findViewById(R.id.web_button);
+        webButton = findViewById(R.id.web_button);
 
-        btnWeb.setOnClickListener(new View.OnClickListener() {
+        webButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://developer.android.com"));
