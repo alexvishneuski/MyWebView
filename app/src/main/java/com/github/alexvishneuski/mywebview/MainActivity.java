@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnWeb = findViewById(R.id.btnWeb);
+        btnWeb = findViewById(R.id.web_button);
 
         btnWeb.setOnClickListener(new View.OnClickListener() {
             @Override
