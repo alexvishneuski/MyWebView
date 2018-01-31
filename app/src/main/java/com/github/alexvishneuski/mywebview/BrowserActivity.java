@@ -1,19 +1,21 @@
 package com.github.alexvishneuski.mywebview;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.github.alexvishneuski.mywebview.VKAccessToken.ACCESS_TOKEN;
+import static com.github.alexvishneuski.mywebview.VKAccessToken.CREATED;
+import static com.github.alexvishneuski.mywebview.VKAccessToken.EXPIRES_IN;
 
 
 public class BrowserActivity extends AppCompatActivity {
@@ -61,7 +63,7 @@ public class BrowserActivity extends AppCompatActivity {
             return super.shouldOverrideUrlLoading(view, url);
         }
 
-        @Override
+       /* @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             Log.d(TAG, "onPageStarted() called with: url = [" + url + "]");
@@ -71,17 +73,28 @@ public class BrowserActivity extends AppCompatActivity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             Log.d(TAG, "onPageFinished() called with: url = [" + url + "]");
-        }
+        }*/
     }
 
     public void onLoaded() {
         Log.d(TAG, "onLoaded: " + mRedirectUrl);
         Toast.makeText(this, mRedirectUrl, Toast.LENGTH_LONG).show();
+        if (mRedirectUrl.startsWith("https://oauth.vk.com/blank.html")) {
+            String accessToken = tokenFromUrlString(mRedirectUrl).getAccessToken();
+            Log.d(TAG, "onLoaded: " + accessToken);
+            Toast.makeText(this, accessToken, Toast.LENGTH_LONG).show();
+        }
     }
 
+    public static VKAccessToken tokenFromUrlString(String urlString) {
+        if (urlString == null)
+            return null;
+        Map<String, String> parameters = explodeRedirectUrl(urlString);
 
+        return tokenFromParameters(parameters);
+    }
 
-    public static Map<String,String> explodeRedirectUrl(String pRedirectUrl){
+    public static Map<String, String> explodeRedirectUrl(String pRedirectUrl) {
         String[] url = pRedirectUrl.split("#");
         String[] keyValuePairs = url[1].split("&");
         HashMap<String, String> parameters = new HashMap<String, String>(keyValuePairs.length);
@@ -94,5 +107,24 @@ public class BrowserActivity extends AppCompatActivity {
         return parameters;
     }
 
+    public static VKAccessToken tokenFromParameters(Map<String, String> parameters) {
+        if (parameters == null || parameters.size() == 0)
+            return null;
+        VKAccessToken token = new VKAccessToken();
+        try {
+            token.setAccessToken(parameters.get(ACCESS_TOKEN));
+            token.setExpiresIn(Integer.parseInt(parameters.get(EXPIRES_IN)));
 
+            if (parameters.containsKey(CREATED)) {
+                token.setCreated(Long.parseLong(parameters.get(CREATED)));
+            } else {
+                token.setCreated(System.currentTimeMillis());
+            }
+
+            return token;
+        } catch (Exception e) {
+
+            return null;
+        }
+    }
 }
