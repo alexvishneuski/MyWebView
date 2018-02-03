@@ -1,5 +1,6 @@
 package com.github.alexvishneuski.mywebview;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,8 +38,9 @@ public class BrowserActivity extends AppCompatActivity {
 
 
         Uri data = getIntent().getData();
-        Log.d(TAG, "onCreate: data " + data.toString());
+
         if (data != null) {
+            Log.d(TAG, "onCreate: data " + data.toString());
             webView.loadUrl(data.toString());
         }
 
@@ -73,11 +75,17 @@ public class BrowserActivity extends AppCompatActivity {
     public void onLoaded() {
         Log.d(TAG, "onLoaded: " + mRedirectUrl);
         Toast.makeText(this, mRedirectUrl, Toast.LENGTH_LONG).show();
+
         if (mRedirectUrl.startsWith("https://oauth.vk.com/blank.html")) {
             VKAccessToken vkAccessToken = tokenFromUrlString(mRedirectUrl);
             String accessToken = vkAccessToken.getAccessToken();
-            Log.d(TAG, "onLoaded: " + accessToken);
-            Toast.makeText(this, accessToken, Toast.LENGTH_LONG).show();
+            int expiresIn = vkAccessToken.getExpiresIn();
+            long created = vkAccessToken.getCreated();
+
+            @SuppressLint("DefaultLocale")
+            String msg = String.format("this is the access Token: %s. It was created %d and it will expires in %d secs", accessToken, created, expiresIn);
+            Log.d(TAG, "onLoaded: " + msg);
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -92,7 +100,7 @@ public class BrowserActivity extends AppCompatActivity {
     public static Map<String, String> explodeRedirectUrl(String pRedirectUrl) {
         String[] url = pRedirectUrl.split("#");
         String[] keyValuePairs = url[1].split("&");
-        HashMap<String, String> parameters = new HashMap<String, String>(keyValuePairs.length);
+        HashMap<String, String> parameters = new HashMap<>(keyValuePairs.length);
 
         for (String keyValueString : keyValuePairs) {
             String[] keyValueArray = keyValueString.split("=");

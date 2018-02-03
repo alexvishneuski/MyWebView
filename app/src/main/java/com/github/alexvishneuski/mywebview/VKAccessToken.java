@@ -2,10 +2,9 @@ package com.github.alexvishneuski.mywebview;
 
 class VKAccessToken {
 
-    public static final String ACCESS_TOKEN = "access_token";
-    public static final String EXPIRES_IN = "expires_in";
-    public static final String CREATED = "created";
-
+    static final String ACCESS_TOKEN = "access_token";
+    static final String EXPIRES_IN = "expires_in";
+    static final String CREATED = "created";
 
     private String mAccessToken;
     private int mExpiresIn;
