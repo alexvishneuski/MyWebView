@@ -13,6 +13,6 @@ public class VKActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vk);
-        webButton = findViewById(R.id.web_button);
+        webButton = findViewById(R.id.app_button);
     }
 }
