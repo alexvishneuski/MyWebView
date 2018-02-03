@@ -42,12 +42,6 @@ public class BrowserActivity extends AppCompatActivity {
             webView.loadUrl(data.toString());
         }
 
-        //getting url
-        String s = webView.getOriginalUrl();
-        Log.d(TAG, "onCreate: " + s);
-
-        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
-
         Intent intent = new Intent(BrowserActivity.this, VKActivity.class);
         // intent.putExtra(URL, s);
         BrowserActivity.this.startActivity(intent);
@@ -80,7 +74,8 @@ public class BrowserActivity extends AppCompatActivity {
         Log.d(TAG, "onLoaded: " + mRedirectUrl);
         Toast.makeText(this, mRedirectUrl, Toast.LENGTH_LONG).show();
         if (mRedirectUrl.startsWith("https://oauth.vk.com/blank.html")) {
-            String accessToken = tokenFromUrlString(mRedirectUrl).getAccessToken();
+            VKAccessToken vkAccessToken = tokenFromUrlString(mRedirectUrl);
+            String accessToken = vkAccessToken.getAccessToken();
             Log.d(TAG, "onLoaded: " + accessToken);
             Toast.makeText(this, accessToken, Toast.LENGTH_LONG).show();
         }
@@ -91,7 +86,7 @@ public class BrowserActivity extends AppCompatActivity {
             return null;
         Map<String, String> parameters = explodeRedirectUrl(urlString);
 
-        return tokenFromParameters(parameters);
+        return tokenFromRedirectParameters(parameters);
     }
 
     public static Map<String, String> explodeRedirectUrl(String pRedirectUrl) {
@@ -107,7 +102,7 @@ public class BrowserActivity extends AppCompatActivity {
         return parameters;
     }
 
-    public static VKAccessToken tokenFromParameters(Map<String, String> parameters) {
+    public static VKAccessToken tokenFromRedirectParameters(Map<String, String> parameters) {
         if (parameters == null || parameters.size() == 0)
             return null;
         VKAccessToken token = new VKAccessToken();
